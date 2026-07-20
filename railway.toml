@@ -1,0 +1,16 @@
+# ──────────────────────────────────────────────────────────────
+# Railway deployment configuration for listmonk
+# https://docs.railway.com/reference/config-as-code
+# ──────────────────────────────────────────────────────────────
+
+[build]
+  builder = "DOCKERFILE"
+  dockerfilePath = "Dockerfile"
+
+[deploy]
+  # Railway injects $PORT automatically — listmonk binds to it via entrypoint
+  startCommand = "./listmonk"
+  healthcheckPath = "/api/health"
+  healthcheckTimeout = 60
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 3
