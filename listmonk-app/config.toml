@@ -1,0 +1,15 @@
+[app]
+  address = "0.0.0.0:9000"
+  admin_username = "listmonk"
+  admin_password = "listmonk_admin_2024"
+
+[db]
+  host = "helium"
+  port = 5432
+  user = "postgres"
+  password = "password"
+  database = "heliumdb"
+  ssl_mode = "disable"
+  max_open = 25
+  max_idle = 25
+  max_lifetime = "300s"
