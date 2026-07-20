@@ -9,24 +9,17 @@ args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
 [workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "listmonk"
+runButton = "listmonk"
 
 [[workflows.workflow]]
 name = "listmonk"
 author = "agent"
+mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash listmonk-app/start.sh"
+waitForPort = 9000
 
 [agent]
 stack = "PNPM_WORKSPACE"
