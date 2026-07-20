@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "CampaignForge"
+version = "1.0.0"
+id = "artifacts/campaign-forge"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25176
+
+[services.development]
+run = "pnpm --filter @workspace/campaign-forge run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/campaign-forge", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/campaign-forge/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25176"
+BASE_PATH = "/"

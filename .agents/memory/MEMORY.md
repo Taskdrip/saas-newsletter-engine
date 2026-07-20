@@ -1,0 +1,2 @@
+- [CampaignForge stack decisions](campaignforge-stack.md) — key architecture decisions made during initial build; consult before major changes.
+- [Orval + Zod v3 format issue](orval-zod-format.md) — format: email/uri in OpenAPI spec breaks Orval codegen with Zod v3; never add those format annotations.

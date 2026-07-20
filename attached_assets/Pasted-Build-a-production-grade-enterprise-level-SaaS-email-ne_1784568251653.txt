@@ -1,0 +1,764 @@
+Build a production-grade, enterprise-level SaaS email newsletter and marketing platform named CampaignForge.
+
+The application should use the open-source Listmonk project as its email campaign engine instead of reinventing email delivery.
+
+GitHub Reference:
+
+https://github.com/knadh/listmonk
+
+The application should extend Listmonk into a true multi-tenant SaaS platform similar to Mailchimp, Brevo, ConvertKit, Beehiiv, or ActiveCampaign.
+
+This must be a complete working production application, not a prototype.
+
+Main Goals
+
+The platform must allow businesses to:
+
+Create an account
+Verify email
+Create multiple workspaces
+Connect websites
+Connect WordPress
+Import subscribers
+Create signup forms
+Create landing pages
+Build newsletters
+Send campaigns
+Schedule campaigns
+Track analytics
+Manage audiences
+Automate emails
+Connect SMTP providers
+Manage API Keys
+Invite team members
+
+Everything should be modern, responsive, scalable and production-ready.
+
+Technology Stack
+
+Frontend
+
+React
+Next.js
+TypeScript
+TailwindCSS
+ShadCN UI
+React Query
+Framer Motion
+
+Backend
+
+Go
+Listmonk
+PostgreSQL
+Redis
+REST API
+GraphQL
+WebSockets
+
+Authentication
+
+JWT
+OAuth
+Google Login
+GitHub Login
+Microsoft Login
+
+Infrastructure
+
+Docker
+Docker Compose
+Nginx
+Traefik
+Kubernetes Ready
+
+Cloud Storage
+
+S3 Compatible Storage
+
+Deployment
+
+Railway
+Fly.io
+DigitalOcean
+AWS
+Azure
+Google Cloud
+SaaS Architecture
+
+The platform must support unlimited organizations.
+
+Organization
+
+↓
+
+Workspace
+
+↓
+
+Lists
+
+↓
+
+Subscribers
+
+↓
+
+Campaigns
+
+↓
+
+Analytics
+
+Every organization must be isolated.
+
+No data leakage.
+
+User Roles
+
+Super Admin
+
+Platform Admin
+
+Organization Owner
+
+Admin
+
+Marketing Manager
+
+Editor
+
+Analyst
+
+Viewer
+
+Custom Roles
+
+RBAC permissions
+
+Dashboard
+
+Modern analytics dashboard.
+
+Display
+
+Subscribers
+
+Growth
+
+Campaigns
+
+Open Rate
+
+Click Rate
+
+Bounce Rate
+
+Revenue
+
+Conversions
+
+Geographic map
+
+Top Countries
+
+Top Devices
+
+Top Browsers
+
+Real-time campaign activity
+
+Subscriber Management
+
+Unlimited contacts
+
+Tags
+
+Segments
+
+Dynamic Segments
+
+Static Lists
+
+Duplicate detection
+
+Merge contacts
+
+CSV Import
+
+Excel Import
+
+JSON Import
+
+API Import
+
+Webhook Import
+
+Zapier
+
+RSS Import
+
+Google Sheets Import
+
+Shopify
+
+WooCommerce
+
+WordPress
+
+BigCommerce
+
+Magento
+
+Custom API
+
+WordPress Plugin
+
+Build an official WordPress plugin.
+
+Features
+
+One-click connection
+
+API Key
+
+Sync users
+
+Sync WooCommerce customers
+
+Sync orders
+
+Sync abandoned carts
+
+Newsletter signup block
+
+Elementor widget
+
+Gutenberg block
+
+Shortcodes
+
+Webhook sync
+
+Automatic sync
+
+Website Connection
+
+Allow users to connect websites.
+
+Methods
+
+JavaScript tracking script
+
+Pixel
+
+REST API
+
+Webhook
+
+Forms
+
+Embedded Forms
+
+Popup Forms
+
+Exit Intent
+
+Slide In
+
+Floating Bar
+
+Inline Forms
+
+Sticky Forms
+
+Landing Pages
+
+Hosted Forms
+
+Double Opt-in
+
+Spam Protection
+
+Google reCAPTCHA
+
+Cloudflare Turnstile
+
+Campaign Builder
+
+Drag and Drop Builder
+
+Responsive Templates
+
+HTML Editor
+
+MJML Support
+
+Markdown
+
+Code View
+
+Image Upload
+
+Asset Library
+
+AI Assistant
+
+Personalization
+
+Conditional Content
+
+Merge Tags
+
+Dynamic Content
+
+RSS Campaigns
+
+A/B Testing
+
+Preview
+
+Inbox Preview
+
+Spam Score
+
+Accessibility Checker
+
+Dark Mode Preview
+
+Email Templates
+
+Professional template library.
+
+Categories
+
+Business
+
+Ecommerce
+
+Jewelry
+
+Real Estate
+
+Education
+
+Healthcare
+
+Travel
+
+Agency
+
+Events
+
+Holiday
+
+Minimal
+
+Corporate
+
+Modern
+
+Luxury
+
+Campaign Types
+
+Regular Campaign
+
+Automated Campaign
+
+RSS Campaign
+
+Drip Campaign
+
+Transactional Email
+
+Birthday Campaign
+
+Anniversary Campaign
+
+Welcome Series
+
+Re-engagement
+
+Cart Recovery
+
+Win-back
+
+Survey
+
+Product Launch
+
+Flash Sale
+
+Event
+
+Newsletter
+
+Automation Builder
+
+Visual drag-and-drop workflow.
+
+Triggers
+
+Signup
+
+Purchase
+
+Link Click
+
+Open Email
+
+Visited Page
+
+Tag Added
+
+Date
+
+Webhook
+
+API Event
+
+RSS Update
+
+Conditions
+
+IF
+
+ELSE
+
+WAIT
+
+GOAL
+
+Split
+
+Random
+
+Branch
+
+Actions
+
+Send Email
+
+Add Tag
+
+Remove Tag
+
+Move List
+
+Webhook
+
+Slack
+
+Discord
+
+SMS
+
+Push Notification
+
+CRM
+
+SMTP Connections
+
+Allow users to connect:
+
+Amazon SES
+
+Mailgun
+
+SendGrid
+
+Postmark
+
+Brevo
+
+SMTP2GO
+
+Mailjet
+
+Elastic Email
+
+SparkPost
+
+Resend
+
+Custom SMTP
+
+SMTP Validation
+
+DKIM Checker
+
+SPF Checker
+
+DMARC Checker
+
+TLS Support
+
+Connection Testing
+
+API
+
+Complete REST API
+
+GraphQL
+
+OpenAPI Documentation
+
+Swagger
+
+API Keys
+
+Rate Limiting
+
+OAuth
+
+Webhooks
+
+Analytics
+
+Real-time
+
+Opens
+
+Clicks
+
+Geo
+
+Devices
+
+Heatmaps
+
+Link Tracking
+
+UTM
+
+Revenue Tracking
+
+Google Analytics
+
+Meta Pixel
+
+TikTok Pixel
+
+LinkedIn Insight
+
+Custom Events
+
+Conversion Tracking
+
+Campaign Comparison
+
+Subscriber Growth
+
+Retention
+
+Deliverability
+
+Billing
+
+Stripe
+
+Paddle
+
+LemonSqueezy
+
+Subscriptions
+
+Coupons
+
+Invoices
+
+Usage Billing
+
+Free Plan
+
+Starter
+
+Pro
+
+Business
+
+Enterprise
+
+Admin Panel
+
+Manage Users
+
+Manage Organizations
+
+SMTP Monitoring
+
+Queue Monitoring
+
+Logs
+
+Audit Logs
+
+Feature Flags
+
+Billing
+
+Support Tickets
+
+Impersonation
+
+Global Settings
+
+API Monitoring
+
+Health Checks
+
+Security
+
+OWASP compliant
+
+2FA
+
+Passkeys
+
+Magic Links
+
+Encrypted Secrets
+
+CSRF Protection
+
+XSS Protection
+
+Rate Limiting
+
+Bot Detection
+
+Email Verification
+
+Password Reset
+
+Session Management
+
+Audit Logging
+
+AI Features
+
+AI Subject Generator
+
+AI Newsletter Writer
+
+AI Email Rewriter
+
+AI CTA Generator
+
+AI Segmentation Suggestions
+
+AI Send Time Optimization
+
+AI Spam Detection
+
+AI Personalization
+
+AI A/B Test Suggestions
+
+Performance
+
+Handle:
+
+10 million subscribers
+
+1 million campaigns
+
+100,000 concurrent users
+
+Background workers
+
+Job queues
+
+Horizontal scaling
+
+Caching
+
+CDN
+
+Image Optimization
+
+Lazy Loading
+
+Streaming
+
+Integrations
+
+WordPress
+
+WooCommerce
+
+Shopify
+
+Zapier
+
+Make
+
+HubSpot
+
+Salesforce
+
+Notion
+
+Google Sheets
+
+Slack
+
+Discord
+
+Meta
+
+Google Analytics
+
+Cloudflare
+
+Webhook Engine
+
+Developer Experience
+
+Docker Compose
+
+Seed Data
+
+Testing
+
+CI/CD
+
+GitHub Actions
+
+Unit Tests
+
+Integration Tests
+
+E2E Tests
+
+Storybook
+
+API Documentation
+
+Deliverables
+
+Generate:
+
+Full production architecture
+Database schema
+Backend implementation
+Frontend implementation
+Authentication
+SaaS multi-tenancy
+WordPress plugin
+Public REST API
+Docker deployment
+Production documentation
+Installation guide
+Testing suite
+Admin dashboard
+Billing system
+Analytics engine
+Automation engine
+Campaign builder
+Template library
+Subscriber management
+Complete deployment scripts
+
+Use clean architecture, domain-driven design where appropriate, modular services, comprehensive documentation, and production-ready code. The application must integrate with Listmonk as its underlying email engine while exposing a modern SaaS interface and API.

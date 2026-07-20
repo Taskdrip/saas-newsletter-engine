@@ -3,20 +3,53 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CampaignForge API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: profile
+    description: Current user profile
+  - name: organizations
+    description: Organization management
+  - name: workspaces
+    description: Workspace management
+  - name: members
+    description: Team member management
+  - name: subscribers
+    description: Subscriber management
+  - name: lists
+    description: Subscriber lists
+  - name: segments
+    description: Audience segments
+  - name: tags
+    description: Subscriber tags
+  - name: campaigns
+    description: Email campaigns
+  - name: templates
+    description: Email templates
+  - name: automations
+    description: Automation workflows
+  - name: smtp
+    description: SMTP connection management
+  - name: apikeys
+    description: API key management
+  - name: forms
+    description: Signup forms
+  - name: websites
+    description: Connected websites
+  - name: analytics
+    description: Analytics and reporting
+  - name: billing
+    description: Billing and subscription
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +57,2850 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ── Profile ──────────────────────────────────────────────────────────────
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    patch:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  # ── Organizations ────────────────────────────────────────────────────────
+  /organizations:
+    get:
+      operationId: listOrganizations
+      tags: [organizations]
+      summary: List user's organizations
+      responses:
+        "200":
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+    post:
+      operationId: createOrganization
+      tags: [organizations]
+      summary: Create an organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  /organizations/{orgId}:
+    get:
+      operationId: getOrganization
+      tags: [organizations]
+      summary: Get organization by ID
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Organization
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+    patch:
+      operationId: updateOrganization
+      tags: [organizations]
+      summary: Update organization
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+    delete:
+      operationId: deleteOrganization
+      tags: [organizations]
+      summary: Delete organization
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Workspaces ───────────────────────────────────────────────────────────
+  /workspaces:
+    get:
+      operationId: listWorkspaces
+      tags: [workspaces]
+      summary: List workspaces for current org
+      parameters:
+        - name: orgId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Workspace"
+    post:
+      operationId: createWorkspace
+      tags: [workspaces]
+      summary: Create a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspaceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+
+  /workspaces/{workspaceId}:
+    get:
+      operationId: getWorkspace
+      tags: [workspaces]
+      summary: Get workspace by ID
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+    patch:
+      operationId: updateWorkspace
+      tags: [workspaces]
+      summary: Update workspace
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspaceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+    delete:
+      operationId: deleteWorkspace
+      tags: [workspaces]
+      summary: Delete workspace
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Members ──────────────────────────────────────────────────────────────
+  /workspaces/{workspaceId}/members:
+    get:
+      operationId: listMembers
+      tags: [members]
+      summary: List workspace members
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+    post:
+      operationId: inviteMember
+      tags: [members]
+      summary: Invite a member to workspace
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberInvite"
+      responses:
+        "201":
+          description: Invited
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+
+  /workspaces/{workspaceId}/members/{memberId}:
+    patch:
+      operationId: updateMember
+      tags: [members]
+      summary: Update member role
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+    delete:
+      operationId: removeMember
+      tags: [members]
+      summary: Remove member from workspace
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Removed
+
+  # ── Subscribers ──────────────────────────────────────────────────────────
+  /subscribers:
+    get:
+      operationId: listSubscribers
+      tags: [subscribers]
+      summary: List subscribers
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: listId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [active, unsubscribed, bounced, complained]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Paginated list of subscribers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriberList"
+    post:
+      operationId: createSubscriber
+      tags: [subscribers]
+      summary: Create a subscriber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriberInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscriber"
+
+  /subscribers/{subscriberId}:
+    get:
+      operationId: getSubscriber
+      tags: [subscribers]
+      summary: Get subscriber by ID
+      parameters:
+        - name: subscriberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Subscriber
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscriber"
+    patch:
+      operationId: updateSubscriber
+      tags: [subscribers]
+      summary: Update subscriber
+      parameters:
+        - name: subscriberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriberUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscriber"
+    delete:
+      operationId: deleteSubscriber
+      tags: [subscribers]
+      summary: Delete subscriber
+      parameters:
+        - name: subscriberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /subscribers/import:
+    post:
+      operationId: importSubscribers
+      tags: [subscribers]
+      summary: Import subscribers (CSV/JSON)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriberImport"
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResult"
+
+  # ── Lists ────────────────────────────────────────────────────────────────
+  /lists:
+    get:
+      operationId: listLists
+      tags: [lists]
+      summary: List subscriber lists
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriberListEntity"
+    post:
+      operationId: createList
+      tags: [lists]
+      summary: Create a subscriber list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriberListEntity"
+
+  /lists/{listId}:
+    get:
+      operationId: getList
+      tags: [lists]
+      summary: Get list by ID
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriberListEntity"
+    patch:
+      operationId: updateList
+      tags: [lists]
+      summary: Update list
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriberListEntity"
+    delete:
+      operationId: deleteList
+      tags: [lists]
+      summary: Delete list
+      parameters:
+        - name: listId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Segments ─────────────────────────────────────────────────────────────
+  /segments:
+    get:
+      operationId: listSegments
+      tags: [segments]
+      summary: List segments
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Segments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Segment"
+    post:
+      operationId: createSegment
+      tags: [segments]
+      summary: Create a segment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SegmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Segment"
+
+  /segments/{segmentId}:
+    get:
+      operationId: getSegment
+      tags: [segments]
+      summary: Get segment by ID
+      parameters:
+        - name: segmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Segment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Segment"
+    patch:
+      operationId: updateSegment
+      tags: [segments]
+      summary: Update segment
+      parameters:
+        - name: segmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SegmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Segment"
+    delete:
+      operationId: deleteSegment
+      tags: [segments]
+      summary: Delete segment
+      parameters:
+        - name: segmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Tags ─────────────────────────────────────────────────────────────────
+  /tags:
+    get:
+      operationId: listTags
+      tags: [tags]
+      summary: List tags
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tag"
+    post:
+      operationId: createTag
+      tags: [tags]
+      summary: Create a tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+
+  /tags/{tagId}:
+    delete:
+      operationId: deleteTag
+      tags: [tags]
+      summary: Delete tag
+      parameters:
+        - name: tagId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Campaigns ────────────────────────────────────────────────────────────
+  /campaigns:
+    get:
+      operationId: listCampaigns
+      tags: [campaigns]
+      summary: List campaigns
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [draft, scheduled, running, paused, finished, cancelled]
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Paginated list of campaigns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignPage"
+    post:
+      operationId: createCampaign
+      tags: [campaigns]
+      summary: Create a campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /campaigns/{campaignId}:
+    get:
+      operationId: getCampaign
+      tags: [campaigns]
+      summary: Get campaign by ID
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+    patch:
+      operationId: updateCampaign
+      tags: [campaigns]
+      summary: Update campaign
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+    delete:
+      operationId: deleteCampaign
+      tags: [campaigns]
+      summary: Delete campaign
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /campaigns/{campaignId}/send:
+    post:
+      operationId: sendCampaign
+      tags: [campaigns]
+      summary: Send campaign immediately
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Campaign sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /campaigns/{campaignId}/schedule:
+    post:
+      operationId: scheduleCampaign
+      tags: [campaigns]
+      summary: Schedule campaign
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignSchedule"
+      responses:
+        "200":
+          description: Scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /campaigns/{campaignId}/duplicate:
+    post:
+      operationId: duplicateCampaign
+      tags: [campaigns]
+      summary: Duplicate a campaign
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Duplicated campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /campaigns/{campaignId}/stats:
+    get:
+      operationId: getCampaignStats
+      tags: [campaigns]
+      summary: Get campaign analytics stats
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Campaign stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignStats"
+
+  # ── Templates ────────────────────────────────────────────────────────────
+  /templates:
+    get:
+      operationId: listTemplates
+      tags: [templates]
+      summary: List email templates
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Template"
+    post:
+      operationId: createTemplate
+      tags: [templates]
+      summary: Create a template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+
+  /templates/{templateId}:
+    get:
+      operationId: getTemplate
+      tags: [templates]
+      summary: Get template by ID
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+    patch:
+      operationId: updateTemplate
+      tags: [templates]
+      summary: Update template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+    delete:
+      operationId: deleteTemplate
+      tags: [templates]
+      summary: Delete template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Automations ──────────────────────────────────────────────────────────
+  /automations:
+    get:
+      operationId: listAutomations
+      tags: [automations]
+      summary: List automations
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Automations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Automation"
+    post:
+      operationId: createAutomation
+      tags: [automations]
+      summary: Create an automation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+
+  /automations/{automationId}:
+    get:
+      operationId: getAutomation
+      tags: [automations]
+      summary: Get automation by ID
+      parameters:
+        - name: automationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Automation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+    patch:
+      operationId: updateAutomation
+      tags: [automations]
+      summary: Update automation
+      parameters:
+        - name: automationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+    delete:
+      operationId: deleteAutomation
+      tags: [automations]
+      summary: Delete automation
+      parameters:
+        - name: automationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /automations/{automationId}/toggle:
+    patch:
+      operationId: toggleAutomation
+      tags: [automations]
+      summary: Enable or disable automation
+      parameters:
+        - name: automationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationToggle"
+      responses:
+        "200":
+          description: Toggled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+
+  # ── SMTP Connections ─────────────────────────────────────────────────────
+  /smtp-connections:
+    get:
+      operationId: listSmtpConnections
+      tags: [smtp]
+      summary: List SMTP connections
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: SMTP connections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SmtpConnection"
+    post:
+      operationId: createSmtpConnection
+      tags: [smtp]
+      summary: Create an SMTP connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SmtpConnectionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SmtpConnection"
+
+  /smtp-connections/{smtpId}:
+    get:
+      operationId: getSmtpConnection
+      tags: [smtp]
+      summary: Get SMTP connection
+      parameters:
+        - name: smtpId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: SMTP connection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SmtpConnection"
+    patch:
+      operationId: updateSmtpConnection
+      tags: [smtp]
+      summary: Update SMTP connection
+      parameters:
+        - name: smtpId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SmtpConnectionUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SmtpConnection"
+    delete:
+      operationId: deleteSmtpConnection
+      tags: [smtp]
+      summary: Delete SMTP connection
+      parameters:
+        - name: smtpId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /smtp-connections/{smtpId}/test:
+    post:
+      operationId: testSmtpConnection
+      tags: [smtp]
+      summary: Test SMTP connection
+      parameters:
+        - name: smtpId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Test result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SmtpTestResult"
+
+  # ── API Keys ─────────────────────────────────────────────────────────────
+  /api-keys:
+    get:
+      operationId: listApiKeys
+      tags: [apikeys]
+      summary: List API keys
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: API keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiKey"
+    post:
+      operationId: createApiKey
+      tags: [apikeys]
+      summary: Create an API key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiKeyInput"
+      responses:
+        "201":
+          description: Created (key value only returned once)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKeyCreated"
+
+  /api-keys/{keyId}:
+    delete:
+      operationId: deleteApiKey
+      tags: [apikeys]
+      summary: Delete API key
+      parameters:
+        - name: keyId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Forms ────────────────────────────────────────────────────────────────
+  /forms:
+    get:
+      operationId: listForms
+      tags: [forms]
+      summary: List signup forms
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Form"
+    post:
+      operationId: createForm
+      tags: [forms]
+      summary: Create a signup form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+
+  /forms/{formId}:
+    get:
+      operationId: getForm
+      tags: [forms]
+      summary: Get form by ID
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Form
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+    patch:
+      operationId: updateForm
+      tags: [forms]
+      summary: Update form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+    delete:
+      operationId: deleteForm
+      tags: [forms]
+      summary: Delete form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Websites ─────────────────────────────────────────────────────────────
+  /websites:
+    get:
+      operationId: listWebsites
+      tags: [websites]
+      summary: List connected websites
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Websites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Website"
+    post:
+      operationId: createWebsite
+      tags: [websites]
+      summary: Connect a website
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebsiteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Website"
+
+  /websites/{websiteId}:
+    get:
+      operationId: getWebsite
+      tags: [websites]
+      summary: Get website by ID
+      parameters:
+        - name: websiteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Website
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Website"
+    patch:
+      operationId: updateWebsite
+      tags: [websites]
+      summary: Update website
+      parameters:
+        - name: websiteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebsiteUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Website"
+    delete:
+      operationId: deleteWebsite
+      tags: [websites]
+      summary: Delete website connection
+      parameters:
+        - name: websiteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ── Analytics ────────────────────────────────────────────────────────────
+  /analytics/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [analytics]
+      summary: Get dashboard summary statistics
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [7d, 30d, 90d, 1y]
+            default: 30d
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /analytics/subscriber-growth:
+    get:
+      operationId: getSubscriberGrowth
+      tags: [analytics]
+      summary: Get subscriber growth over time
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [7d, 30d, 90d, 1y]
+            default: 30d
+      responses:
+        "200":
+          description: Growth data series
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GrowthDataPoint"
+
+  /analytics/campaign-performance:
+    get:
+      operationId: getCampaignPerformance
+      tags: [analytics]
+      summary: Get recent campaign performance
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Campaign performance list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CampaignPerformance"
+
+  /analytics/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [analytics]
+      summary: Get recent campaign activity feed
+      parameters:
+        - name: workspaceId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Activity items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  # ── Billing ──────────────────────────────────────────────────────────────
+  /billing/plans:
+    get:
+      operationId: listBillingPlans
+      tags: [billing]
+      summary: List available billing plans
+      responses:
+        "200":
+          description: Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BillingPlan"
+
+  /billing/subscription:
+    get:
+      operationId: getBillingSubscription
+      tags: [billing]
+      summary: Get current subscription
+      parameters:
+        - name: orgId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Current subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+    post:
+      operationId: updateBillingSubscription
+      tags: [billing]
+      summary: Change subscription plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionChange"
+      responses:
+        "200":
+          description: Updated subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    # ── Profile ────────────────────────────────────────────────────────────
+    UserProfile:
+      type: object
+      required: [id, clerkId, email, createdAt]
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        timezone:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+  
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        timezone:
+          type: string
+
+    # ── Organizations ──────────────────────────────────────────────────────
+    Organization:
+      type: object
+      required: [id, name, slug, ownerId, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        logoUrl:
+          type: ["string", "null"]
+        ownerId:
+          type: integer
+        plan:
+          type: string
+          enum: [free, starter, pro, business, enterprise]
+        createdAt:
+          type: string
+  
+
+    OrganizationInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        slug:
+          type: string
+        logoUrl:
+          type: string
+
+    OrganizationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        logoUrl:
+          type: string
+
+    # ── Workspaces ─────────────────────────────────────────────────────────
+    Workspace:
+      type: object
+      required: [id, orgId, name, createdAt]
+      properties:
+        id:
+          type: integer
+        orgId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        fromName:
+          type: ["string", "null"]
+        fromEmail:
+          type: ["string", "null"]
+        replyToEmail:
+          type: ["string", "null"]
+        timezone:
+          type: ["string", "null"]
+        subscriberCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    WorkspaceInput:
+      type: object
+      required: [orgId, name]
+      properties:
+        orgId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+
+        replyToEmail:
+          type: string
+
+        timezone:
+          type: string
+
+    WorkspaceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+
+        replyToEmail:
+          type: string
+
+        timezone:
+          type: string
+
+    # ── Members ────────────────────────────────────────────────────────────
+    Member:
+      type: object
+      required: [id, workspaceId, email, role, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        userId:
+          type: ["integer", "null"]
+        email:
+          type: string
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        role:
+          type: string
+          enum: [owner, admin, marketing_manager, editor, analyst, viewer]
+        status:
+          type: string
+          enum: [active, invited, suspended]
+        createdAt:
+          type: string
+  
+
+    MemberInvite:
+      type: object
+      required: [email, role]
+      properties:
+        email:
+          type: string
+
+        role:
+          type: string
+          enum: [admin, marketing_manager, editor, analyst, viewer]
+
+    MemberUpdate:
+      type: object
+      required: [role]
+      properties:
+        role:
+          type: string
+          enum: [admin, marketing_manager, editor, analyst, viewer]
+
+    # ── Subscribers ────────────────────────────────────────────────────────
+    Subscriber:
+      type: object
+      required: [id, workspaceId, email, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        email:
+          type: string
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, unsubscribed, bounced, complained]
+        tags:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        source:
+          type: ["string", "null"]
+        listIds:
+          type: array
+          items:
+            type: integer
+        createdAt:
+          type: string
+  
+        updatedAt:
+          type: string
+  
+
+    SubscriberList:
+      type: object
+      required: [data, total, page, limit]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Subscriber"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    SubscriberInput:
+      type: object
+      required: [workspaceId, email]
+      properties:
+        workspaceId:
+          type: integer
+        email:
+          type: string
+
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        listIds:
+          type: array
+          items:
+            type: integer
+        attributes:
+          type: object
+          additionalProperties: true
+
+    SubscriberUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        status:
+          type: string
+          enum: [active, unsubscribed]
+        tags:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: object
+          additionalProperties: true
+
+    SubscriberImport:
+      type: object
+      required: [workspaceId, subscribers]
+      properties:
+        workspaceId:
+          type: integer
+        subscribers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubscriberInput"
+        listIds:
+          type: array
+          items:
+            type: integer
+        updateExisting:
+          type: boolean
+          default: true
+
+    ImportResult:
+      type: object
+      required: [imported, updated, skipped, errors]
+      properties:
+        imported:
+          type: integer
+        updated:
+          type: integer
+        skipped:
+          type: integer
+        errors:
+          type: array
+          items:
+            type: string
+
+    # ── Lists ──────────────────────────────────────────────────────────────
+    SubscriberListEntity:
+      type: object
+      required: [id, workspaceId, name, type, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [static, dynamic]
+        isPublic:
+          type: boolean
+        subscriberCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    ListInput:
+      type: object
+      required: [workspaceId, name]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        type:
+          type: string
+          enum: [static, dynamic]
+          default: static
+        isPublic:
+          type: boolean
+          default: false
+
+    ListUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        isPublic:
+          type: boolean
+
+    # ── Segments ───────────────────────────────────────────────────────────
+    Segment:
+      type: object
+      required: [id, workspaceId, name, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        conditions:
+          type: object
+          additionalProperties: true
+        subscriberCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    SegmentInput:
+      type: object
+      required: [workspaceId, name]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        conditions:
+          type: object
+          additionalProperties: true
+
+    SegmentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        conditions:
+          type: object
+          additionalProperties: true
+
+    # ── Tags ───────────────────────────────────────────────────────────────
+    Tag:
+      type: object
+      required: [id, workspaceId, name, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        color:
+          type: ["string", "null"]
+        subscriberCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    TagInput:
+      type: object
+      required: [workspaceId, name]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        color:
+          type: string
+
+    # ── Campaigns ──────────────────────────────────────────────────────────
+    Campaign:
+      type: object
+      required: [id, workspaceId, name, type, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        subject:
+          type: ["string", "null"]
+        previewText:
+          type: ["string", "null"]
+        fromName:
+          type: ["string", "null"]
+        fromEmail:
+          type: ["string", "null"]
+        replyTo:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [regular, automated, rss, drip, transactional, ab_test, newsletter]
+        status:
+          type: string
+          enum: [draft, scheduled, running, paused, finished, cancelled]
+        templateId:
+          type: ["integer", "null"]
+        listIds:
+          type: array
+          items:
+            type: integer
+        segmentIds:
+          type: array
+          items:
+            type: integer
+        scheduledAt:
+          type: ["string", "null"]
+  
+        sentAt:
+          type: ["string", "null"]
+  
+        totalRecipients:
+          type: integer
+        createdAt:
+          type: string
+  
+        updatedAt:
+          type: string
+  
+
+    CampaignPage:
+      type: object
+      required: [data, total, page, limit]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Campaign"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CampaignInput:
+      type: object
+      required: [workspaceId, name, type]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        subject:
+          type: string
+        previewText:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+
+        replyTo:
+          type: string
+
+        type:
+          type: string
+          enum: [regular, automated, rss, drip, transactional, ab_test, newsletter]
+        templateId:
+          type: integer
+        listIds:
+          type: array
+          items:
+            type: integer
+        segmentIds:
+          type: array
+          items:
+            type: integer
+
+    CampaignUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        subject:
+          type: string
+        previewText:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+
+        replyTo:
+          type: string
+
+        templateId:
+          type: integer
+        listIds:
+          type: array
+          items:
+            type: integer
+        segmentIds:
+          type: array
+          items:
+            type: integer
+
+    CampaignSchedule:
+      type: object
+      required: [scheduledAt]
+      properties:
+        scheduledAt:
+          type: string
+  
+
+    CampaignStats:
+      type: object
+      required: [campaignId, sent, delivered, opened, clicked, bounced, unsubscribed, complained]
+      properties:
+        campaignId:
+          type: integer
+        sent:
+          type: integer
+        delivered:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        bounced:
+          type: integer
+        unsubscribed:
+          type: integer
+        complained:
+          type: integer
+        openRate:
+          type: number
+        clickRate:
+          type: number
+        bounceRate:
+          type: number
+        unsubscribeRate:
+          type: number
+        revenue:
+          type: number
+        topLinks:
+          type: array
+          items:
+            $ref: "#/components/schemas/LinkStat"
+        opensByDevice:
+          type: object
+          additionalProperties: true
+        opensByCountry:
+          type: object
+          additionalProperties: true
+
+    LinkStat:
+      type: object
+      required: [url, clicks]
+      properties:
+        url:
+          type: string
+        clicks:
+          type: integer
+        uniqueClicks:
+          type: integer
+
+    # ── Templates ──────────────────────────────────────────────────────────
+    Template:
+      type: object
+      required: [id, workspaceId, name, category, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        category:
+          type: string
+          enum: [business, ecommerce, newsletter, event, welcome, transactional, minimal, custom]
+        html:
+          type: ["string", "null"]
+        thumbnail:
+          type: ["string", "null"]
+        isGlobal:
+          type: boolean
+        createdAt:
+          type: string
+  
+
+    TemplateInput:
+      type: object
+      required: [workspaceId, name, category]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        category:
+          type: string
+          enum: [business, ecommerce, newsletter, event, welcome, transactional, minimal, custom]
+        html:
+          type: string
+
+    TemplateUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        category:
+          type: string
+        html:
+          type: string
+
+    # ── Automations ────────────────────────────────────────────────────────
+    Automation:
+      type: object
+      required: [id, workspaceId, name, trigger, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        trigger:
+          type: string
+          enum: [signup, purchase, link_click, email_open, page_visit, tag_added, date, webhook, api_event]
+        status:
+          type: string
+          enum: [active, inactive, draft]
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/AutomationStep"
+        enrolledCount:
+          type: integer
+        completedCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    AutomationStep:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [send_email, wait, condition, add_tag, remove_tag, move_list, webhook]
+        config:
+          type: object
+          additionalProperties: true
+        nextStepId:
+          type: ["string", "null"]
+
+    AutomationInput:
+      type: object
+      required: [workspaceId, name, trigger]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        trigger:
+          type: string
+          enum: [signup, purchase, link_click, email_open, page_visit, tag_added, date, webhook, api_event]
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/AutomationStep"
+
+    AutomationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        trigger:
+          type: string
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/AutomationStep"
+
+    AutomationToggle:
+      type: object
+      required: [active]
+      properties:
+        active:
+          type: boolean
+
+    # ── SMTP Connections ───────────────────────────────────────────────────
+    SmtpConnection:
+      type: object
+      required: [id, workspaceId, name, provider, host, port, isDefault, isVerified, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        provider:
+          type: string
+          enum: [amazon_ses, sendgrid, mailgun, postmark, brevo, smtp2go, mailjet, resend, sparkpost, custom]
+        host:
+          type: string
+        port:
+          type: integer
+        username:
+          type: string
+        tls:
+          type: boolean
+        isDefault:
+          type: boolean
+        isVerified:
+          type: boolean
+        dailySentCount:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    SmtpConnectionInput:
+      type: object
+      required: [workspaceId, name, provider, host, port, username, password]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        provider:
+          type: string
+          enum: [amazon_ses, sendgrid, mailgun, postmark, brevo, smtp2go, mailjet, resend, sparkpost, custom]
+        host:
+          type: string
+        port:
+          type: integer
+        username:
+          type: string
+        password:
+          type: string
+        tls:
+          type: boolean
+          default: true
+        isDefault:
+          type: boolean
+          default: false
+
+    SmtpConnectionUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        host:
+          type: string
+        port:
+          type: integer
+        username:
+          type: string
+        password:
+          type: string
+        tls:
+          type: boolean
+        isDefault:
+          type: boolean
+
+    SmtpTestResult:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        latencyMs:
+          type: ["integer", "null"]
+
+    # ── API Keys ───────────────────────────────────────────────────────────
+    ApiKey:
+      type: object
+      required: [id, workspaceId, name, prefix, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        prefix:
+          type: string
+        lastUsedAt:
+          type: ["string", "null"]
+  
+        expiresAt:
+          type: ["string", "null"]
+  
+        scopes:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+  
+
+    ApiKeyInput:
+      type: object
+      required: [workspaceId, name]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        scopes:
+          type: array
+          items:
+            type: string
+        expiresAt:
+          type: string
+  
+
+    ApiKeyCreated:
+      type: object
+      required: [id, name, key, prefix, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        key:
+          type: string
+        prefix:
+          type: string
+        createdAt:
+          type: string
+  
+
+    # ── Forms ──────────────────────────────────────────────────────────────
+    Form:
+      type: object
+      required: [id, workspaceId, name, type, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [embedded, popup, slide_in, floating_bar, landing_page, inline]
+        status:
+          type: string
+          enum: [active, inactive, draft]
+        listIds:
+          type: array
+          items:
+            type: integer
+        submissionCount:
+          type: integer
+        embedCode:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+  
+
+    FormInput:
+      type: object
+      required: [workspaceId, name, type]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        type:
+          type: string
+          enum: [embedded, popup, slide_in, floating_bar, landing_page, inline]
+        listIds:
+          type: array
+          items:
+            type: integer
+
+    FormUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum: [active, inactive]
+        listIds:
+          type: array
+          items:
+            type: integer
+
+    # ── Websites ───────────────────────────────────────────────────────────
+    Website:
+      type: object
+      required: [id, workspaceId, name, url, status, createdAt]
+      properties:
+        id:
+          type: integer
+        workspaceId:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, unverified]
+        trackingScript:
+          type: ["string", "null"]
+        isVerified:
+          type: boolean
+        pageviewsLast30d:
+          type: integer
+        createdAt:
+          type: string
+  
+
+    WebsiteInput:
+      type: object
+      required: [workspaceId, name, url]
+      properties:
+        workspaceId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        url:
+          type: string
+
+
+    WebsiteUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        url:
+          type: string
+
+
+    # ── Analytics ──────────────────────────────────────────────────────────
+    DashboardStats:
+      type: object
+      required: [totalSubscribers, activeSubscribers, totalCampaigns, totalSent, avgOpenRate, avgClickRate, avgBounceRate, newSubscribersThisPeriod, unsubscribedThisPeriod]
+      properties:
+        totalSubscribers:
+          type: integer
+        activeSubscribers:
+          type: integer
+        totalCampaigns:
+          type: integer
+        totalSent:
+          type: integer
+        avgOpenRate:
+          type: number
+        avgClickRate:
+          type: number
+        avgBounceRate:
+          type: number
+        avgUnsubscribeRate:
+          type: number
+        newSubscribersThisPeriod:
+          type: integer
+        unsubscribedThisPeriod:
+          type: integer
+        revenueThisPeriod:
+          type: number
+        totalForms:
+          type: integer
+        totalAutomations:
+          type: integer
+        activeAutomations:
+          type: integer
+
+    GrowthDataPoint:
+      type: object
+      required: [date, subscribers, unsubscribed, net]
+      properties:
+        date:
+          type: string
+        subscribers:
+          type: integer
+        unsubscribed:
+          type: integer
+        net:
+          type: integer
+
+    CampaignPerformance:
+      type: object
+      required: [campaignId, name, sentAt, sent, openRate, clickRate, bounceRate]
+      properties:
+        campaignId:
+          type: integer
+        name:
+          type: string
+        sentAt:
+          type: string
+  
+        sent:
+          type: integer
+        openRate:
+          type: number
+        clickRate:
+          type: number
+        bounceRate:
+          type: number
+        unsubscribeRate:
+          type: number
+        revenue:
+          type: number
+
+    ActivityItem:
+      type: object
+      required: [id, type, description, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [campaign_sent, subscriber_added, subscriber_unsubscribed, campaign_scheduled, automation_triggered, form_submission, list_created]
+        description:
+          type: string
+        campaignName:
+          type: ["string", "null"]
+        subscriberEmail:
+          type: ["string", "null"]
+        timestamp:
+          type: string
+  
+
+    # ── Billing ────────────────────────────────────────────────────────────
+    BillingPlan:
+      type: object
+      required: [id, name, price, interval, limits]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        interval:
+          type: string
+          enum: [month, year]
+        limits:
+          $ref: "#/components/schemas/PlanLimits"
+        features:
+          type: array
+          items:
+            type: string
+        isPopular:
+          type: boolean
+
+    PlanLimits:
+      type: object
+      properties:
+        subscribers:
+          type: ["integer", "null"]
+        emailsPerMonth:
+          type: ["integer", "null"]
+        workspaces:
+          type: ["integer", "null"]
+        teamMembers:
+          type: ["integer", "null"]
+
+    Subscription:
+      type: object
+      required: [id, orgId, planId, planName, status, currentPeriodEnd]
+      properties:
+        id:
+          type: integer
+        orgId:
+          type: integer
+        planId:
+          type: string
+        planName:
+          type: string
+        status:
+          type: string
+          enum: [active, trialing, past_due, cancelled, incomplete]
+        currentPeriodStart:
+          type: string
+  
+        currentPeriodEnd:
+          type: string
+  
+        cancelAtPeriodEnd:
+          type: boolean
+        subscribersUsed:
+          type: integer
+        emailsSentThisMonth:
+          type: integer
+
+    SubscriptionChange:
+      type: object
+      required: [planId]
+      properties:
+        planId:
+          type: string
+        orgId:
+          type: integer
