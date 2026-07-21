@@ -42,17 +42,15 @@ DB_SSLMODE="${DB_SSLMODE:-require}"
 
 # Railway injects PORT; listmonk must bind to it
 APP_PORT="${PORT:-9000}"
-ADMIN_USER="${LISTMONK_ADMIN_USER:-listmonk}"
-ADMIN_PASSWORD="${LISTMONK_ADMIN_PASSWORD:?LISTMONK_ADMIN_PASSWORD env var is required}"
 
 # ── 3. Write config.toml ──────────────────────────────────────────────────────
+# Note: admin_username / admin_password are deprecated in listmonk v6 — users
+# are managed via the Admin UI. We omit them to avoid the startup WARNING.
 CONFIG_PATH="/listmonk/config.toml"
 
 cat > "$CONFIG_PATH" << TOML
 [app]
   address = "0.0.0.0:${APP_PORT}"
-  admin_username = "${ADMIN_USER}"
-  admin_password = "${ADMIN_PASSWORD}"
 
 [db]
   host = "${DB_HOST}"
@@ -66,22 +64,20 @@ cat > "$CONFIG_PATH" << TOML
   max_lifetime = "300s"
 TOML
 
-echo "[entrypoint] config.toml written (db=${DB_HOST}:${DB_PORT}/${DB_NAME})"
+echo "[entrypoint] config.toml written (db=${DB_HOST}:${DB_PORT}/${DB_NAME}, port=${APP_PORT})"
 
-# ── 4. First-boot install ─────────────────────────────────────────────────────
-# Set LISTMONK_INSTALL=true the FIRST time you deploy so the DB tables are
-# created. Remove / set to false for all subsequent deploys.
-if [ "${LISTMONK_INSTALL}" = "true" ]; then
-  echo "[entrypoint] Running --install to initialise the database …"
-  /listmonk/listmonk --install --yes --config "$CONFIG_PATH"
-  echo "[entrypoint] Install complete."
-fi
+# ── 4. Install DB schema (idempotent — skips if already set up) ───────────────
+echo "[entrypoint] Ensuring database schema …"
+/listmonk/listmonk --install --idempotent --yes --config "$CONFIG_PATH"
+echo "[entrypoint] Schema ready."
 
 # ── 5. Upgrade (runs safe migrations, no-op if already current) ───────────────
-# Always runs; safe to leave enabled permanently.
-if [ "${LISTMONK_UPGRADE}" != "false" ]; then
+# Only runs when LISTMONK_UPGRADE=true to avoid adding startup latency on every
+# deploy. Set it once when upgrading listmonk versions, then remove it.
+if [ "${LISTMONK_UPGRADE}" = "true" ]; then
   echo "[entrypoint] Running --upgrade …"
-  /listmonk/listmonk --upgrade --yes --config "$CONFIG_PATH" || true
+  /listmonk/listmonk --upgrade --yes --config "$CONFIG_PATH"
+  echo "[entrypoint] Upgrade complete."
 fi
 
 # ── 6. Launch ─────────────────────────────────────────────────────────────────
