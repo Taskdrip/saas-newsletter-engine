@@ -226,6 +226,65 @@ export async function getCampaign(campaignId: number): Promise<LMCampaign> {
   return data.data;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Settings (SMTP sync)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface LMSmtpConfig {
+  uuid: string;
+  enabled: boolean;
+  host: string;
+  hello_hostname: string;
+  port: number;
+  auth_protocol: "login" | "cram" | "plain" | "none";
+  username: string;
+  password: string;
+  email_headers: unknown[];
+  max_conns: number;
+  max_msg_retries: number;
+  idle_timeout: string;
+  wait_timeout: string;
+  tls_type: "none" | "TLS" | "STARTTLS";
+  tls_skip_verify: boolean;
+}
+
+/** Fetch the full listmonk settings object. */
+export async function getSettings(): Promise<Record<string, unknown>> {
+  const data = await lmFetch<{ data: Record<string, unknown> }>("/api/settings");
+  return data.data ?? {};
+}
+
+/**
+ * Push an SMTP configuration to listmonk.
+ * Merges with existing settings so other settings aren't lost.
+ */
+export async function updateSmtpSettings(smtp: Partial<LMSmtpConfig>): Promise<void> {
+  const current = await getSettings();
+  const existing = (current.smtp as LMSmtpConfig[] | undefined) ?? [];
+
+  // Replace the first SMTP entry (or add one if none exists)
+  const newSmtp: LMSmtpConfig = {
+    uuid: existing[0]?.uuid ?? crypto.randomUUID(),
+    enabled: true,
+    hello_hostname: "",
+    auth_protocol: "login",
+    email_headers: [],
+    max_conns: 10,
+    max_msg_retries: 2,
+    idle_timeout: "15s",
+    wait_timeout: "5s",
+    tls_type: smtp.port === 465 ? "TLS" : "STARTTLS",
+    tls_skip_verify: false,
+    ...existing[0],
+    ...smtp,
+  };
+
+  await lmFetch("/api/settings", {
+    method: "PUT",
+    body: JSON.stringify({ ...current, smtp: [newSmtp] }),
+  });
+}
+
 /** Fetch real stats for a campaign from listmonk. */
 export async function getCampaignStats(campaignId: number) {
   const campaign = await getCampaign(campaignId);
