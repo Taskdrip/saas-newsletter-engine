@@ -14,7 +14,10 @@ import {
   Globe,
   Settings,
   BarChart,
-  ChevronDown
+  ChevronDown,
+  ShieldCheck,
+  Server,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,6 +33,13 @@ const navItems = [
   { icon: FormInput, label: "Forms", href: "/forms" },
   { icon: Globe, label: "Websites", href: "/websites" },
   { icon: BarChart, label: "Analytics", href: "/analytics" },
+];
+
+const adminNavItems = [
+  { icon: ShieldCheck, label: "Admin Overview", href: "/admin" },
+  { icon: Server, label: "Email Providers", href: "/admin/providers" },
+  { icon: DollarSign, label: "Pricing Plans", href: "/admin/pricing" },
+  { icon: Users, label: "Users", href: "/admin/users" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -88,6 +98,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer",
                     isActive 
                       ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  )}
+                >
+                  <item.icon className="w-4 h-4" />
+                  {item.label}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Admin Section */}
+        <div className="px-3 py-2 border-t border-sidebar-border">
+          <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider px-3 py-1.5">Admin</p>
+          {adminNavItems.map((item) => {
+            const isActive = location === item.href || location.startsWith(item.href + '/');
+            return (
+              <Link key={item.href} href={item.href} className="block">
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer",
+                    isActive
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                   )}
                 >

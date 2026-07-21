@@ -9,7 +9,7 @@ args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
 [workflows]
-runButton = "listmonk"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "listmonk"
@@ -21,6 +21,43 @@ task = "shell.exec"
 args = "bash listmonk-app/start.sh"
 waitForPort = 9000
 
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "API Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "CampaignForge UI"
+
+[[workflows.workflow]]
+name = "API Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=8080 pnpm --filter @workspace/api-server run dev"
+waitForPort = 8080
+
+[[workflows.workflow]]
+name = "CampaignForge UI"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=8000 BASE_PATH=/campaignforge VITE_CLERK_PROXY_URL=/campaignforge/__clerk pnpm --filter @workspace/campaign-forge run dev"
+waitForPort = 8000
+
 [agent]
 stack = "PNPM_WORKSPACE"
 expertMode = true
@@ -31,7 +68,3 @@ timeoutMs = 20000
 
 [nix]
 channel = "stable-25_05"
-
-[[ports]]
-localPort = 9000
-externalPort = 80

@@ -21,6 +21,10 @@ import FormsPage from "./pages/forms";
 import WebsitesPage from "./pages/websites";
 import SettingsPage from "./pages/settings";
 import AnalyticsPage from "./pages/analytics";
+import AdminDashboard from "./pages/admin/index";
+import AdminProviders from "./pages/admin/providers";
+import AdminPricing from "./pages/admin/pricing";
+import AdminUsers from "./pages/admin/users";
 import AppLayout from "./components/layout/AppLayout";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -183,7 +187,13 @@ function ClerkProviderWithRoutes() {
             <Route path="/websites"><ProtectedRoute component={WebsitesPage} /></Route>
             <Route path="/settings"><ProtectedRoute component={SettingsPage} /></Route>
             <Route path="/analytics"><ProtectedRoute component={AnalyticsPage} /></Route>
-            
+
+            {/* Admin Routes */}
+            <Route path="/admin/providers"><ProtectedRoute component={AdminProviders} /></Route>
+            <Route path="/admin/pricing"><ProtectedRoute component={AdminPricing} /></Route>
+            <Route path="/admin/users"><ProtectedRoute component={AdminUsers} /></Route>
+            <Route path="/admin"><ProtectedRoute component={AdminDashboard} /></Route>
+
             <Route>
               <div className="flex min-h-screen items-center justify-center bg-gray-50">
                 <div className="text-center">

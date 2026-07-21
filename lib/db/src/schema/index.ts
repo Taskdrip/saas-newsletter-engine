@@ -10,3 +10,5 @@ export * from "./smtp";
 export * from "./apikeys";
 export * from "./forms";
 export * from "./billing";
+export * from "./emailProviders";
+export * from "./pricingPlans";

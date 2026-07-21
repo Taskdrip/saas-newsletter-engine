@@ -13,6 +13,7 @@ import apiKeysRouter from "./apikeys";
 import formsRouter from "./forms";
 import analyticsRouter from "./analytics";
 import billingRouter from "./billing";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(apiKeysRouter);
 router.use(formsRouter);
 router.use(analyticsRouter);
 router.use(billingRouter);
+router.use(adminRouter);
 
 export default router;
