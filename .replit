@@ -55,7 +55,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "PORT=8000 BASE_PATH=/campaignforge VITE_CLERK_PROXY_URL=/campaignforge/__clerk pnpm --filter @workspace/campaign-forge run dev"
+args = "PORT=8000 BASE_PATH=/ VITE_CLERK_PROXY_URL=/__clerk pnpm --filter @workspace/campaign-forge run dev"
 waitForPort = 8000
 
 [agent]
