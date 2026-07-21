@@ -1,5 +1,5 @@
 kind = "web"
-previewPath = "/"
+previewPath = "/campaignforge"
 title = "CampaignForge"
 version = "1.0.0"
 id = "artifacts/campaign-forge"
@@ -7,7 +7,7 @@ router = "path"
 
 [[services]]
 name = "web"
-paths = [ "/" ]
+paths = [ "/campaignforge" ]
 localPort = 25176
 
 [services.development]
@@ -24,4 +24,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "25176"
-BASE_PATH = "/"
+BASE_PATH = "/campaignforge"
