@@ -10,7 +10,7 @@
 [deploy]
   # startCommand is intentionally omitted — the Dockerfile ENTRYPOINT+CMD handles startup.
   # Increased timeout: idempotent --install runs on every boot before listmonk starts.
-  healthcheckPath = "/api/health"
+  healthcheckPath = "/health"
   healthcheckTimeout = 120
   restartPolicyType = "ON_FAILURE"
   restartPolicyMaxRetries = 3
