@@ -57,12 +57,10 @@ TOML
 
 echo "[start.sh] Config written — db=${DB_HOST}:${DB_PORT}/${DB_NAME}, port=${APP_PORT}"
 
-# First-boot: install DB schema. Set LISTMONK_INSTALL=true once, then remove it.
-if [ "${LISTMONK_INSTALL}" = "true" ]; then
-  echo "[start.sh] Installing database schema..."
-  ./listmonk --install --yes
-  echo "[start.sh] Install complete."
-fi
+# Always run install idempotently — skips if DB is already set up, installs if not.
+echo "[start.sh] Ensuring database schema is installed..."
+./listmonk --install --idempotent --yes
+echo "[start.sh] Schema ready."
 
 # Upgrade-only: runs safe migrations. Set LISTMONK_UPGRADE=true when bumping version.
 if [ "${LISTMONK_UPGRADE}" = "true" ]; then
@@ -72,4 +70,4 @@ if [ "${LISTMONK_UPGRADE}" = "true" ]; then
 fi
 
 echo "[start.sh] Starting listmonk..."
-exec ./listmonk
+exec ./listmonk --yes
