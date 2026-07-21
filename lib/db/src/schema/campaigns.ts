@@ -19,6 +19,8 @@ export const campaignsTable = pgTable("campaigns", {
   scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
   sentAt: timestamp("sent_at", { withTimezone: true }),
   totalRecipients: integer("total_recipients").notNull().default(0),
+  listmonkCampaignId: integer("listmonk_campaign_id"),
+  listmonkListId: integer("listmonk_list_id"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
